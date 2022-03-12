@@ -16,6 +16,7 @@ export const createPost = (req, res) => {
 
 export const getAllPost = (req, res) => {
     Post.find({})
+        .sort('createdAt')
         .exec()
         .then((posts) => {
             res.status(200).json({ posts: posts });
@@ -26,18 +27,23 @@ export const getAllPost = (req, res) => {
 };
 
 export const updatePost = (req, res) => {
-    const postID = req.query.postid;
+    const postID = req.query.postid; // new !
     const isLiked = req.body.isLiked;
+    // { commentCreator : name , comment : input}
+    const comment = req.body.comment;
     Post.findById(postID.toString())
         .exec()
-        .then((res) => {
-            const currnetLikes = res.postInfo.likes;
-            if (isLiked === true) {
-                res.postInfo.likes = currnetLikes + 1;
-            } else {
-                res.postInfo.likes = currnetLikes - 1;
+        .then((post) => {
+            const currnetLikes = post.postInfo.likes;
+            if (comment) {
+                post.postInfo.comments.push(comment);
             }
-            res.save();
+            if (isLiked === true) {
+                post.postInfo.likes = currnetLikes + 1;
+            } else if (isLiked === false) {
+                post.postInfo.likes = currnetLikes - 1;
+            }
+            post.save();
         })
         .catch((err) => {
             console.log(err);

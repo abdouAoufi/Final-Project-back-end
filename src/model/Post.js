@@ -16,7 +16,6 @@ const postSchema = new Schema({
             comment: { type: types.String, required: true },
         }, ],
     },
-});
+}, { timestamps: true });
 
-
-export default model("Post", postSchema)
+export default model("Post", postSchema);
