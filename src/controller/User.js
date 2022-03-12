@@ -50,7 +50,7 @@ export const loginUser = (req, res) => {
             } else {
                 compare(userInfo.password, user.password).then((isValid) => {
                     if (isValid === true) {
-                        res.status(200).json({ message: "Welcome" });
+                        res.status(200).json({ name: user.name });
                     } else {
                         res.status(401).json({ message: "Your password is wrong" });
                     }
